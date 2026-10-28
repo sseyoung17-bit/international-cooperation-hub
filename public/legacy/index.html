@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!-- Leaflet 지도 CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<!-- Leaflet 지도 JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="app-container">
+
+  <!-- 왼쪽 사이드바 -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🌐</div>
+
+      <div>
+        <h1>MOIS</h1>
+        <p>International Cooperation</p>
+      </div>
+    </div>
+
+    <nav class="navigation">
+      <button class="nav-item active" data-section="dashboard">
+        <span>📊</span>
+        <span>종합 현황</span>
+      </button>
+
+      <button class="nav-item" data-section="map">
+        <span>🌍</span>
+        <span>협력 지도</span>
+      </button>
+
+      <button class="nav-item" data-section="countries">
+        <span>🤝</span>
+        <span>국가별 협력</span>
+      </button>
+
+      <button class="nav-item" data-section="events">
+        <span>📅</span>
+        <span>국제행사</span>
+      </button>
+
+      <button class="nav-item" data-section="mou">
+        <span>📄</span>
+        <span>MOU 관리</span>
+      </button>
+
+      <button class="nav-item" data-section="projects">
+        <span>📁</span>
+        <span>협력사업</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-info">
+      <p>마지막 업데이트</p>
+      <strong id="lastUpdated">2026. 7. 15.</strong>
+      <span>샘플 데이터 기반</span>
+    </div>
+  </aside>
+
+  <!-- 오른쪽 메인 영역 -->
+  <main class="main-content">
+
+    <!-- 상단 헤더 -->
+    <header class="top-header">
+      <div class="header-left">
+        <button
+          type="button"
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+          aria-label="메뉴 열기"
+        >
+          ☰
+        </button>
+
+        <div>
+          <h2>국제협력 종합 대시보드</h2>
+          <p>International Cooperation Dashboard</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="current-time">
+          <span>현재 시각</span>
+          <strong id="currentTime">--:--:--</strong>
+        </div>
+
+        <button
+          type="button"
+          class="icon-button"
+          id="darkModeButton"
+          aria-label="화면 모드 변경"
+        >
+          🌙
+        </button>
+
+        <div class="profile">
+          <div class="profile-avatar">MOIS</div>
+
+          <div class="profile-text">
+            <strong>국제협력담당관실</strong>
+            <span>관리자</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+
+      <!-- 환영 문구 -->
+      <section class="welcome-section">
+        <div>
+          <p class="eyebrow">OVERVIEW</p>
+          <h2>국제협력 업무 현황</h2>
+          <p>
+            국가별 협력사업, 국제행사, MOU 및 주요 업무 진행상황을
+            한 화면에서 확인할 수 있습니다.
+          </p>
+        </div>
+
+        <button type="button" class="primary-button" id="resetButton">
+          ↻ 전체 현황 보기
+        </button>
+      </section>
+
+      <!-- 요약 카드 -->
+      <section class="summary-grid">
+        <article class="summary-card blue">
+          <div class="summary-icon">🌍</div>
+
+          <div>
+            <p>협력 국가</p>
+            <h3 id="countryCount">0</h3>
+            <span>개 국가·지역</span>
+          </div>
+        </article>
+
+        <article class="summary-card green">
+          <div class="summary-icon">📁</div>
+
+          <div>
+            <p>진행 중 협력사업</p>
+            <h3 id="projectCount">0</h3>
+            <span>현재 진행 중</span>
+          </div>
+        </article>
+
+        <article class="summary-card orange">
+          <div class="summary-icon">📄</div>
+
+          <div>
+            <p>체결 MOU</p>
+            <h3 id="mouCount">0</h3>
+            <span>유효 협약 기준</span>
+          </div>
+        </article>
+
+        <article class="summary-card purple">
+          <div class="summary-icon">📅</div>
+
+          <div>
+            <p>예정 국제행사</p>
+            <h3 id="eventCount">0</h3>
+            <span>향후 일정</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- 검색 및 필터 -->
+      <section class="filter-panel">
+        <div class="search-box">
+          <span>🔎</span>
+
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="국가, 국제기구 또는 협력내용 검색"
+          />
+        </div>
+
+        <select id="regionFilter" aria-label="지역 선택">
+          <option value="all">전체 지역</option>
+          <option value="Asia">아시아</option>
+          <option value="Europe">유럽</option>
+          <option value="Americas">미주</option>
+          <option value="Oceania">오세아니아</option>
+          <option value="International">국제기구</option>
+        </select>
+
+        <select id="typeFilter" aria-label="협력 유형 선택">
+          <option value="all">전체 협력 유형</option>
+          <option value="디지털정부">디지털정부</option>
+          <option value="재난안전">재난안전</option>
+          <option value="지방행정">지방행정</option>
+          <option value="인사행정">인사행정</option>
+          <option value="정책교류">정책교류</option>
+        </select>
+      </section>
+
+      <!-- 지도 및 상세정보 -->
+      <section class="map-detail-grid">
+        <article class="panel map-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-label">COOPERATION MAP</p>
+              <h3>국가별 국제협력 현황</h3>
+            </div>
+
+            <div class="map-legend">
+              <span>
+                <i class="legend-dot active-dot"></i>
+                진행 중
+              </span>
+
+              <span>
+                <i class="legend-dot completed-dot"></i>
+                완료
+              </span>
+
+              <span>
+                <i class="legend-dot planned-dot"></i>
+                예정
+              </span>
+            </div>
+          </div>
+
+          <div id="map"></div>
+
+          <p class="map-note">
+            지도 마커를 클릭하면 해당 국가의 상세 협력정보가 표시됩니다.
+          </p>
+        </article>
+
+        <article class="panel country-detail-panel" id="countryDetail">
+          <div class="detail-placeholder">
+            <div class="placeholder-icon">🌐</div>
+            <h3>협력 국가를 선택하세요</h3>
+            <p>
+              지도 마커 또는 아래 국가 목록을 클릭하면 상세정보가
+              표시됩니다.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <!-- 차트 및 행사 -->
+      <section class="analytics-grid">
+        <article class="panel chart-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-label">PERFORMANCE</p>
+              <h3>연도별 국제협력 실적</h3>
+            </div>
+
+            <select id="chartMetric" aria-label="차트 항목 선택">
+              <option value="meetings">국제회의</option>
+              <option value="projects">협력사업</option>
+              <option value="visits">고위급 교류</option>
+            </select>
+          </div>
+
+          <div class="chart-wrapper">
+            <canvas id="cooperationChart"></canvas>
+          </div>
+        </article>
+
+        <article class="panel events-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-label">UPCOMING EVENTS</p>
+              <h3>다가오는 국제행사</h3>
+            </div>
+
+            <button type="button" class="text-button" id="showAllEvents">
+              전체 보기
+            </button>
+          </div>
+
+          <div class="event-list" id="eventList"></div>
+        </article>
+      </section>
+
+      <!-- 국가 목록 및 업무 현황 -->
+      <section class="bottom-grid">
+        <article class="panel country-table-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-label">COUNTRY STATUS</p>
+              <h3>국가별 협력 현황</h3>
+            </div>
+
+            <span class="result-count" id="resultCount">0개 결과</span>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>국가·기구</th>
+                  <th>지역</th>
+                  <th>주요 분야</th>
+                  <th>사업</th>
+                  <th>MOU</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+
+              <tbody id="countryTableBody"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel task-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-label">RECENT TASKS</p>
+              <h3>최근 업무 진행현황</h3>
+            </div>
+          </div>
+
+          <div class="task-list" id="taskList"></div>
+        </article>
+      </section>
+
+      <footer class="dashboard-footer">
+        <p>
+          © 2026 Ministry of the Interior and Safety · International
+          Cooperation Dashboard
+        </p>
+
+        <p>본 화면의 내용은 교육용 샘플 데이터입니다.</p>
+      </footer>
+    </div>
+  </main>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+</div>
+
+<!-- 알림창 -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✓</span>
+  <p id="toastMessage">완료되었습니다.</p>
+</div>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
