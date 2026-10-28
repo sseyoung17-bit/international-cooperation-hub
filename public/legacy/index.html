@@ -8,7 +8,7 @@
 
   </head>
     
-  <body>
+  <body data-view="dashboard">
   <!-- Leaflet 지도 CSS -->
 <link
   rel="stylesheet"
@@ -34,36 +34,13 @@
       </div>
     </div>
 
-    <nav class="navigation">
-      <button class="nav-item active" data-section="dashboard">
-        <span>📊</span>
-        <span>종합 현황</span>
-      </button>
-
-      <button class="nav-item" data-section="map">
-        <span>🌍</span>
-        <span>협력 지도</span>
-      </button>
-
-      <button class="nav-item" data-section="countries">
-        <span>🤝</span>
-        <span>국가별 협력</span>
-      </button>
-
-      <button class="nav-item" data-section="events">
-        <span>📅</span>
-        <span>국제행사</span>
-      </button>
-
-      <button class="nav-item" data-section="mou">
-        <span>📄</span>
-        <span>MOU 관리</span>
-      </button>
-
-      <button class="nav-item" data-section="projects">
-        <span>📁</span>
-        <span>협력사업</span>
-      </button>
+    <nav class="navigation" aria-label="주요 메뉴">
+      <button class="nav-item active" data-section="dashboard"><span>🌐</span><span>국제협력 현황</span></button>
+      <button class="nav-item" data-section="countries"><span>🤝</span><span>국가별 협력 현황</span></button>
+      <button class="nav-item" data-section="events"><span>📅</span><span>국제행사</span></button>
+      <button class="nav-item" data-section="mou"><span>📄</span><span>MOU 관리</span></button>
+      <button class="nav-item" data-section="translation"><span>📝</span><span>번역센터</span></button>
+      <button class="nav-item" data-section="glossary"><span>📚</span><span>Glossary</span></button>
     </nav>
 
     <div class="sidebar-info">
@@ -89,7 +66,7 @@
         </button>
 
         <div>
-          <h2>국제협력 종합 대시보드</h2>
+          <h2>국제협력 현황</h2>
           <p>International Cooperation Dashboard</p>
         </div>
       </div>
@@ -144,9 +121,9 @@
           <div class="summary-icon">🌍</div>
 
           <div>
-            <p>협력 국가</p>
+            <p>협력 국가·기구</p>
             <h3 id="countryCount">0</h3>
-            <span>개 국가·지역</span>
+            <span>17개국 · 4개 기구</span>
           </div>
         </article>
 
@@ -199,7 +176,7 @@
           <option value="Europe">유럽</option>
           <option value="Americas">미주</option>
           <option value="Oceania">오세아니아</option>
-          <option value="International">국제기구</option>
+          <option value="International">국제기구·지역협력체</option>
         </select>
 
         <select id="typeFilter" aria-label="협력 유형 선택">
@@ -337,6 +314,47 @@
         </article>
       </section>
 
+
+      <section class="panel glossary-center" id="glossaryPanel">
+        <div class="panel-header"><div><p class="panel-label">TERMINOLOGY</p><h3>Glossary · 분야별 용어집</h3><p class="sample-note">교육용 예시 용어입니다. 추가·수정·삭제 내용은 현재 브라우저에 자동 저장됩니다.</p></div></div>
+        <div class="glossary-toolbar"><input id="glossarySearch" type="search" placeholder="한국어·영어·설명 검색" aria-label="용어 검색"/><select id="glossaryFilter" aria-label="분야별 필터"><option value="all">전체 분야</option><option>재난안전</option><option>디지털정부</option><option>국제협력</option><option>지방행정</option><option>주소</option><option>기타</option></select></div>
+        <form id="glossaryForm" class="glossary-form"><input id="glossaryEditId" type="hidden"/><label>분야<select id="glossaryCategory"><option>재난안전</option><option>디지털정부</option><option>국제협력</option><option>지방행정</option><option>주소</option><option>기타</option></select></label><label>한국어 용어<input id="glossaryKo" required placeholder="예: 재난위험경감"/></label><label>영어 용어<input id="glossaryEn" required placeholder="예: Disaster Risk Reduction"/></label><label>설명<input id="glossaryNote" placeholder="설명 또는 참고사항"/></label><div class="glossary-form-actions"><button type="submit" class="primary-button" id="glossarySave">용어 추가</button><button type="button" id="glossaryCancel" class="tr-secondary">입력 초기화</button></div></form>
+        <p class="sample-note" id="glossaryCount"></p><div id="glossaryList"></div>
+      </section>
+      <section class="panel translation-center" id="translationCenterPanel">
+        <div class="panel-header"><div><p class="panel-label">TRANSLATION CENTER</p><h3>번역센터</h3><p class="sample-note">교육용 가상 신청서 · 저장 내용은 이 브라우저에만 유지됩니다. 실제 공문서나 개인정보는 입력하지 마세요.</p></div></div>
+        <div class="translation-grid">
+          <form id="translationRequestForm" class="translation-form">
+            <h4>통번역 신청 등록 / 수정</h4>
+            <input type="hidden" id="trEditId" />
+            <label>신청 부서 <input id="trDept" required placeholder="예: 국제협력담당관실" /></label>
+            <label>업무명 <input id="trTitle" required placeholder="예: 국제협력 서한 영문 번역" /></label>
+            <label>유형 <select id="trType"><option>번역</option><option>통역</option><option>영문 검토</option><option>기타</option></select></label>
+            <label>희망 완료일 <input type="date" id="trDeadline" /></label>
+            <label>신청 내용 <textarea id="trNotes" rows="3" placeholder="가상의 요청 내용을 입력하세요"></textarea></label>
+            <label>처리 결과·회신 <textarea id="trResult" rows="3" placeholder="결과물 내용 또는 회신 메모"></textarea></label>
+            <div class="tr-actions"><button class="primary-button" type="submit" id="trSaveBtn">신청 등록</button><button class="tr-secondary" type="button" id="trCancel">입력 초기화</button></div>
+          </form>
+          <div class="translation-list"><h4>신청 처리 목록 <span id="trCount"></span></h4><p class="sample-note">검토 대기 → 승인 또는 보완 요청 → 작업 중 → 검토 중 → 회신 완료</p><div id="trRecords"></div></div>
+        </div>
+        <div class="translation-template">
+          <h4>목적별 영문 문안 작성 · 가상 초안</h4>
+          <div class="tr-template-grid">
+            <label>서식 유형 <select id="trTemplateType"><option value="thanks">감사 서한</option><option value="condolence">위로 서한</option><option value="proposal">협력 제안</option><option value="request">협력 요청</option><option value="mou">MOU 초안</option></select></label>
+            <label>상대 기관/수신인 <input id="trRecipient" placeholder="예: Partner Ministry" /></label>
+            <label>협력 분야 <input id="trSubject" placeholder="예: disaster risk reduction" /></label>
+          </div>
+          <label>영문 미리보기 <textarea id="trPreview" rows="10" readonly></textarea></label>
+          <div class="tr-actions"><button class="primary-button" id="trDownload" type="button">영문 초안 TXT 다운로드</button><button class="tr-secondary" id="trCopy" type="button">문안 복사</button></div>
+          <p class="sample-note">자동 생성되는 문장은 참고용 가상 문안입니다. 발송 전 표현과 사실관계를 검토하세요.</p>
+        </div>
+      </section>
+      <section class="extended-panels" id="extendedPanels">
+        <article class="panel" id="countryFullPanel"><div class="panel-header"><div><p class="panel-label">PARTNERS</p><h3>국가별 협력 현황 · 가상 자료</h3></div></div><p class="sample-note">국가를 선택하면 해당 국가의 사업·회의·MOU 정보가 표시됩니다.</p><div class="detail-toolbar"><label for="partnerSelect">협력 국가·기구</label><select id="partnerSelect"></select></div><div id="partnerFullDetails"></div><h4 class="country-project-heading">협력사업 · 가상 데이터</h4><div id="fullProjectList"></div></article>
+        <article class="panel" id="eventsFullPanel"><div class="panel-header"><div><p class="panel-label">EVENTS</p><h3>국제행사 전체 일정 · 가상 자료</h3></div></div><div id="fullEventList"></div></article>
+        <article class="panel" id="mouFullPanel"><div class="panel-header"><div><p class="panel-label">MOU</p><h3>MOU 관리 대장 · 가상 자료</h3></div></div><div id="fullMouList"></div></article>
+      </section>
+
       <footer class="dashboard-footer">
         <p>
           © 2026 Ministry of the Interior and Safety · International
@@ -351,6 +369,10 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 </div>
 
+<dialog id="recordDetailDialog" class="record-dialog" aria-labelledby="recordDetailTitle">
+  <div class="record-dialog-top"><h2 id="recordDetailTitle">상세정보</h2><button type="button" class="dialog-close" onclick="document.getElementById('recordDetailDialog').close()" aria-label="닫기">✕ 닫기</button></div>
+  <div id="recordDetailBody"></div>
+</dialog>
 <!-- 알림창 -->
 <div class="toast" id="toast">
   <span id="toastIcon">✓</span>
